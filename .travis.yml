@@ -1,0 +1,15 @@
+language: php
+
+php:
+  - '7.1'
+  - '7.2'
+  - hhvm # on Trusty only
+  - nightly
+
+before_script:
+  - cp .env.travis .env
+  - composer self-update
+  - php artisan key:generate
+
+install:
+  - composer install --prefer-source --no-interaction --dev
