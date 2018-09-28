@@ -35,6 +35,11 @@ class PopularityScoreController extends Controller
     {
         $term = request()->get('term');
 
+        if ($term === null)
+        {
+            return response()->json([], 422);
+        }
+
         try {
             $resultFromDb = $this->popularityResult->getResultBy($term);
 

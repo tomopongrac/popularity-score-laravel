@@ -63,5 +63,24 @@ class PopularityTest extends TestCase
         $this->assertEquals(1, $termsCount);
     }
 
+    /** @test */
+    public function term_is_required_parametar()
+    {
+        // Act
+        $this->get(route('score.show'));
+
+        // Assert
+        $this->assertResponseStatus(422);
+    }
+
+    /** @test */
+    public function term_must_have_word()
+    {
+        // Act
+        $this->get(route('score.show', ['term' => '']));
+
+        // Assert
+        $this->assertResponseStatus(422);
+    }
 
 }
