@@ -20,10 +20,8 @@ class FakeServiceProvider extends ServiceProvider
 
     }
 
-    public function getCount($searchTerm)
+    public function getCount($result)
     {
-        $result = $this->getResult($searchTerm);
-
         return json_decode($result)->total_count;
     }
 }

@@ -13,8 +13,8 @@ abstract class ServiceProvider
 
     public function getScore($word)
     {
-        $positiveCount = $this->getCount($word . ' ' . self::POSITIVE_WORD_SULFIX);
-        $negativeCount = $this->getCount($word . ' ' . self::NEGATIVE_WORD_SULFIX);
+        $positiveCount = $this->getCount($this->getResult($word . ' ' . self::POSITIVE_WORD_SULFIX));
+        $negativeCount = $this->getCount($this->getResult($word . ' ' . self::NEGATIVE_WORD_SULFIX));
 
         return $positiveCount / ($positiveCount + $negativeCount) * 10;
     }
