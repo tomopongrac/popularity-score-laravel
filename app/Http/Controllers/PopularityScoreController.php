@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\NoResultException;
+use App\Exceptions\NoTermInDbException;
 use App\PopularityResult;
 use App\Services\ServiceProvider;
 use Illuminate\Http\Request;
@@ -13,43 +13,51 @@ class PopularityScoreController extends Controller
      * @var ServiceProvider
      */
     private $serviceProvider;
+    /**
+     * @var PopularityResult
+     */
+    private $popularityResult;
 
 
     /**
      * PopularityController constructor.
      */
-    public function __construct(ServiceProvider $serviceProvider)
+    public function __construct(ServiceProvider $serviceProvider, PopularityResult $popularityResult)
     {
         $this->serviceProvider = $serviceProvider;
+        $this->popularityResult = $popularityResult;
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show()
     {
         $term = request()->get('term');
 
         try {
-            $popularityResult = PopularityResult::where('term', $term)->first();
+            $resultFromDb = $this->popularityResult->getResultBy($term);
 
-            if ($popularityResult === null)
+            if ($resultFromDb === null)
             {
-                throw new NoResultException;
+                throw new NoTermInDbException;
             }
 
             return response()->json([
-                'term' => $popularityResult->term,
-                'score' => $popularityResult->score,
+                'term' => $resultFromDb->term,
+                'score' => $resultFromDb->score,
             ]);
 
-        } catch (NoResultException $e) {
-            $popularityResult = new PopularityResult();
-            $popularityResult->term = $term;
-            $popularityResult->score = $this->serviceProvider->getScore(request()->get('term'));
-            $popularityResult->save();
+        } catch (NoTermInDbException $e) {
 
-            return response()->json([
-                'term' => request()->get('term'),
-                'score' => $this->serviceProvider->getScore(request()->get('term'))
-            ]);
+            $result = [
+                'term' => $term,
+                'score' => $this->serviceProvider->getScore($term)
+            ];
+
+            $this->popularityResult->saveResultToDb($result);
+
+            return response()->json($result);
         }
     }
 }

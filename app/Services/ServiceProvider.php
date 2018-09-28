@@ -4,18 +4,17 @@ namespace App\Services;
 
 abstract class ServiceProvider
 {
-    protected $positiveCount;
+    const POSITIVE_WORD_SULFIX = 'rocks';
+    const NEGATIVE_WORD_SULFIX = 'sucks';
 
-    protected $negativeCount;
-
-    public abstract function getResult($word, $sulfix);
+    public abstract function getResult($searchTerm);
 
     public abstract function getCount($result);
 
     public function getScore($word)
     {
-        $positiveCount = $this->getPositiveCount($word);
-        $negativeCount = $this->getNegativeCount($word);
+        $positiveCount = $this->getCount($word . ' ' . self::POSITIVE_WORD_SULFIX);
+        $negativeCount = $this->getCount($word . ' ' . self::NEGATIVE_WORD_SULFIX);
 
         return $positiveCount / ($positiveCount + $negativeCount) * 10;
     }

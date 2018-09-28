@@ -15,13 +15,16 @@ class PopularityTest extends TestCase
 
     use DatabaseMigrations;
 
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->serviceProvider = new FakeServiceProvider();
+        $this->app->instance(ServiceProvider::class, $this->serviceProvider);
+    }
+
     /** @test */
     public function get_json_from_service_provider_and_save_to_db()
     {
-        // Arange
-        $serviceProvider = new FakeServiceProvider();
-        $this->app->instance(ServiceProvider::class, $serviceProvider);
-
         // Act
         $this->get(route('score.show', ['term' => 'php']));
 
@@ -42,8 +45,6 @@ class PopularityTest extends TestCase
     public function get_json_from_db_if_it_exists_in_db()
     {
         // Arange
-        $serviceProvider = new FakeServiceProvider();
-        $this->app->instance(ServiceProvider::class, $serviceProvider);
         factory(PopularityResult::class)->create([
             'term' => 'php',
             'score' => 4.2

@@ -5,9 +5,9 @@ namespace App\Services;
 class FakeServiceProvider extends ServiceProvider
 {
 
-    public function getResult($words, $sulfix)
+    public function getResult($searchTerm)
     {
-        if ($sulfix === 'rocks')
+        if (strpos($searchTerm, self::POSITIVE_WORD_SULFIX) !== false)
         {
             return json_encode([
                 "total_count" => 333
@@ -20,22 +20,10 @@ class FakeServiceProvider extends ServiceProvider
 
     }
 
-    public function getPositiveCount($word)
+    public function getCount($searchTerm)
     {
-        $result = $this->getResult($word, 'rocks');
+        $result = $this->getResult($searchTerm);
 
-        return $this->getCount($result);
-    }
-
-    public function getNegativeCount($word)
-    {
-        $result = $this->getResult($word, 'sucks');
-
-        return $this->getCount($result);
-    }
-
-    public function getCount($result)
-    {
         return json_decode($result)->total_count;
     }
 }
