@@ -15,7 +15,7 @@ class CreatePopularityResultsTable extends Migration
     {
         Schema::create('popularity_results', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('term');
+            $table->string('term')->unique();
             $table->float('score');
             $table->timestamps();
         });
