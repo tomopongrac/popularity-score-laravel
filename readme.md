@@ -1,11 +1,11 @@
 # Popularity Score
 
-<p align="center">
+<p>
 <a href="https://travis-ci.org/tomopongrac/popularity-score-laravel"><img src="https://travis-ci.org/tomopongrac/popularity-score-laravel.svg" alt="Build Status"></a>
 
 ## Opis aplikacije
 
-Ovo je sustav koji računa popularnost određene riječi. Sustav za zadanu riječ pretražuje servis providera i na osnovu broju pozitivnog i negativnog rezultata računa ocjenu popularnosti zadane riječi od 0-10.
+Ovo je sustav koji računa popularnost određene riječi. Sustav za zadanu riječ pretražuje servis providera i na osnovu broju pozitivnog i negativnog rezultata računa ocjenu popularnosti zadane riječi od 0-10 (rezultat će biti zaokružen na dvije decimale).
 
 ## Postavljanje projekta na lokalni server
 

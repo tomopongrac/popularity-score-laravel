@@ -16,6 +16,21 @@ abstract class ServiceProvider
         $positiveCount = $this->getCount($this->getResult($word . ' ' . self::POSITIVE_WORD_SULFIX));
         $negativeCount = $this->getCount($this->getResult($word . ' ' . self::NEGATIVE_WORD_SULFIX));
 
-        return $positiveCount / ($positiveCount + $negativeCount) * 10;
+        return $this->calucalteScore($positiveCount, $negativeCount);
+    }
+
+    /**
+     * @param $positiveCount
+     * @param $negativeCount
+     * @return float|int
+     */
+    public function calucalteScore($positiveCount, $negativeCount)
+    {
+        if ($positiveCount == 0 && $negativeCount === 0)
+        {
+            return 0;
+        }
+
+        return number_format($positiveCount / ($positiveCount + $negativeCount) * 10, 2);
     }
 }
