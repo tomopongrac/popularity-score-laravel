@@ -1,51 +1,85 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# Popularity Score
 
 <p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+<a href="https://travis-ci.org/tomopongrac/popularity-score-laravel"><img src="https://travis-ci.org/tomopongrac/popularity-score-laravel.svg" alt="Build Status"></a>
 
-## About Laravel
+## Opis aplikacije
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+Ovo je sustav koji računa popularnost određene riječi. Sustav za zadanu riječ pretražuje servis providera i na osnovu broju pozitivnog i negativnog rezultata računa ocjenu popularnosti zadane riječi od 0-10.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Postavljanje projekta na lokalni server
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+Potrebno je imati instaliran i konfiguriran lokalni server Laravel Homestead. Detaljni postupak instalacije možete pročitati [ovdje](https://laravel.com/docs/5.4/homestead#installation-and-setup). Za ovaj projekt kreirao sam lokalnu domenu http://api-popularity-score.test
 
-## Learning Laravel
+Kloniraj repozitorij
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+    git clone https://github.com/tomopongrac/popularity-score-laravel.git
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+Prebaci se u direktorij repozitorija
+ 
+     cd popularity-score-laravel
 
-## Laravel Sponsors
+Instaliraj sve komponente aplikacije
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](http://patreon.com/taylorotwell):
+    composer install
 
-- **[Vehikl](http://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Styde](https://styde.net)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
+Kopiraj datoteku env.homestead i eventualne konfigacije promjene
 
-## Contributing
+    cp .env.homestead .env
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+Kreirajte novi ključ za aplikaciju
 
-## Security Vulnerabilities
+    php artisan key:generate
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+Kreirajte bazu na lokalnom serveru
 
-## License
+    mysql -uhomestead -psecret;
+    CREATE DATABASE popularity_score:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+Za provjeru da li je baza kreirana upišite naredbu
+
+    SHOW databases;
+    exit
+
+Napravi tablice u bazi
+
+    php artisan migrate
+
+## Korištenje aplikacije
+
+Kako biste dobili popularnost riječi php u konzolu upišite naredbu
+
+    curl http://popularity-score.test/score?term=php
+
+Rezultat će biti (vrijednost score može biti drugačija s obzirom na trenutnu popularnost tražene riječi na provideru)
+
+    {
+             term: "php",
+             score: 3.39
+    }
+
+Ukoliko tražimo riječ koja ne postoji s naredbom
+
+    curl http://popularity-score.test/score?term=abcdxyz
+
+Dobivamo rezultat
+
+    {
+             term: "abcdxyz",
+             score: 0
+    }
+
+## Kreiranje novog providera
+
+Za kreiranje novog providera potrebno je kreirati novu klasu u direktoriju app/Services koja nasljeđuje klasu ServiceProvider u istom direktoriju.
+
+U novoj klasi se moraju kreirati dvije metode:
+
+* getResult()
+* getCount()
+
+## Zamjena providera
+
+Ukoliko želite promijeniti providera to ćete napraviti na način da promjenite trentutnog providera (GitHubServiceProvider) u klasi AppServiceProvider koja se nalazi na lokaciji app/Providers/AppServiceProvider.php
+
+    $this->app->bind(ServiceProvider::class, GitHubServiceProvider::class);
