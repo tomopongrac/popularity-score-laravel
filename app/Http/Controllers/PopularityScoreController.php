@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Exceptions\NoTermInDbException;
 use App\PopularityResult;
 use App\Services\ServiceProvider;
-use Illuminate\Http\Request;
 
-class PopularityScoreController extends Controller
+abstract class PopularityScoreController extends Controller
 {
+
+    protected $statusCode;
+    protected $responseHeader = [];
     /**
      * @var ServiceProvider
      */
@@ -35,23 +37,21 @@ class PopularityScoreController extends Controller
     {
         $term = request()->get('term');
 
-        if ($term === null)
-        {
-            return response()->json([], 422);
+        if ($term === null) {
+            return $this->setStatusCode(422)->respond($this->transformValidationResponseData([]));
         }
 
         try {
-            $resultFromDb = $this->popularityResult->getResultBy($term);
+            $termFromDb = $this->popularityResult->getResultBy($term);
 
-            if ($resultFromDb === null)
-            {
+            if ($termFromDb === null) {
                 throw new NoTermInDbException;
             }
 
-            return response()->json([
-                'term' => $resultFromDb->term,
-                'score' => $resultFromDb->score,
-            ]);
+            return $this->setStatusCode(200)->respond($this->transformNormalDataResponse([
+                'term' => $termFromDb->term,
+                'score' => $termFromDb->score,
+            ]));
 
         } catch (NoTermInDbException $e) {
 
@@ -62,7 +62,36 @@ class PopularityScoreController extends Controller
 
             $this->popularityResult->saveResultToDb($result);
 
-            return response()->json($result);
+            return $this->setStatusCode(200)->respond($this->transformNormalDataResponse($result));
         }
+    }
+
+    /**
+     * @param $statusCode
+     * @return $this
+     */
+    protected function setStatusCode($statusCode)
+    {
+        $this->statusCode = $statusCode;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+    /**
+     * @param $data
+     * @param array $headers
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respond($data)
+    {
+        return response()->json($data, $this->getStatusCode(), $this->responseHeader);
     }
 }

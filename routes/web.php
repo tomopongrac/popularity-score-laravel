@@ -11,5 +11,5 @@
 |
 */
 
-Route::get('/score', 'PopularityScoreController@show')->name('score.show');
+Route::get('/score', 'PopularityScoreV1Controller@show')->name('score.show');
 
