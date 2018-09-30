@@ -9,6 +9,15 @@ Ovo je sustav koji računa popularnost određene riječi. Sustav za zadanu rije�
 
 ## Postavljanje projekta na lokalni server
 
+Server mora zadovoljiti sljedeće zahtjeve:
+
+* PHP >= 7.0
+* OpenSSL PHP Extension
+* PDO PHP Extension
+* Mbstring PHP Extension
+* Tokenizer PHP Extension
+* XML PHP Extension
+
 Potrebno je imati instaliran i konfiguriran lokalni server Laravel Homestead. Detaljni postupak instalacije možete pročitati [ovdje](https://laravel.com/docs/5.4/homestead#installation-and-setup). Za ovaj projekt kreirao sam lokalnu domenu http://api-popularity-score.test
 
 Kloniraj repozitorij
