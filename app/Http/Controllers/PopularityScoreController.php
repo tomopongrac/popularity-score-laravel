@@ -34,6 +34,7 @@ class PopularityScoreController extends Controller
     }
 
     /**
+     * @param null $version
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($version = null)
@@ -51,6 +52,7 @@ class PopularityScoreController extends Controller
             return $this->setStatusCode(422)->respond($this->jsonResponse->transformValidationResponseData([]));
         }
 
+        // try to get results from database
         try {
             $termFromDb = $this->popularityResult->getResultBy($term);
 
@@ -64,7 +66,7 @@ class PopularityScoreController extends Controller
             ]));
 
         } catch (NoTermInDbException $e) {
-
+            // create new response to provider
             $result = [
                 'term' => $term,
                 'score' => $this->serviceProvider->getScore($term)
@@ -97,7 +99,6 @@ class PopularityScoreController extends Controller
 
     /**
      * @param $data
-     * @param array $headers
      * @return \Illuminate\Http\JsonResponse
      */
     protected function respond($data)
