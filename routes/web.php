@@ -17,7 +17,7 @@ Route::get('score', 'PopularityScoreController@show')->name('score.show')->middl
 Route::get('get-token', function() {
     $guzzle = new GuzzleHttp\Client;
 
-    $response = $guzzle->post('http://popularity-score.test/oauth/token', [
+    $response = $guzzle->post(env('APP_URL') . '/oauth/token', [
         'form_params' => [
             'grant_type' => 'client_credentials',
             'client_id' => env('PASSPORT_CLIENT_ID'),
