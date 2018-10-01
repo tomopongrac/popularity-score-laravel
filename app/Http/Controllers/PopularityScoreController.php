@@ -48,7 +48,7 @@ class PopularityScoreController extends Controller
 
         $term = request()->get('term');
 
-        if ($term === null) {
+        if ($term === null || $term === '') {
             return $this->setStatusCode(422)->respond($this->jsonResponse->transformValidationResponseData([]));
         }
 

@@ -20,6 +20,9 @@ class PopularityV1Test extends TestCase
         parent::setUp();
         $this->serviceProvider = new FakeServiceProvider();
         $this->app->instance(ServiceProvider::class, $this->serviceProvider);
+
+        // TODO napraviti testiranje oauth2
+        $this->withoutMiddleware(\Laravel\Passport\Http\Middleware\CheckClientCredentials::class);
     }
 
     /** @test */
