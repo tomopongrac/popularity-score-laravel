@@ -32,6 +32,16 @@ A u Homestead.yml datoteku pod sites dodajte dole navedeni kod
         - map: api-popularity-score.test
           to: /home/vagrant/Code/popularity-score-laravel/public
 
+Pokrenite VM i spojite se ssh vezom na njega
+
+    cd ~/Homestead
+    vagrant up
+    vagrant ssh
+
+Uđite u direktorij
+
+    cd code
+
 Kloniraj repozitorij
 
     git clone https://github.com/tomopongrac/popularity-score-laravel.git
@@ -66,11 +76,30 @@ Napravi tablice u bazi
 
     php artisan migrate
 
+Morate kreirati ključeve kako biste mogli kreirati token za pristup aplikaciji
+
+    php artisan passport:install
+
+Kopiraj u .env datoteku Client ID i Client Secret koji ste dobili iz prethodne naredbe
+
+    PASSPORT_CLIENT_ID=<Client ID>
+    PASSPORT_CLIENT_SECRET=<Client Secret>
+
 ## Korištenje aplikacije
+
+Možete koristiti aplikaciju [Postman](https://www.getpostman.com) ili možete koristiti konzolu.
+
+Api koristi client credentials autorizaciju pa prvo morate kreirati token get pozivom na link http://api-popularity-score.test/get-token
+
+    curl http://api-popularity-score.test/get-token
+
+A možete ga odmah pohraniti u clipboard pomoću naredbe gdje umjesto <PASTE TOKEN> upisujete token koji ste dobili iz prethodne naredbe
+
+    curl http://api-popularity-score.test/get-token | pbcopy
 
 Kako biste dobili popularnost riječi php u konzolu upišite naredbu
 
-    curl http://api-popularity-score.test/score?term=php
+    curl -H "Authorization: Bearer <PASTE TOKEN>" http://api-popularity-score.test/score?term=php
 
 Rezultat će biti (vrijednost score može biti drugačija s obzirom na trenutnu popularnost tražene riječi na provideru)
 
@@ -81,7 +110,7 @@ Rezultat će biti (vrijednost score može biti drugačija s obzirom na trenutnu 
 
 Ukoliko tražimo riječ koja ne postoji s naredbom
 
-    curl http://api-popularity-score.test/score?term=abcdxyz
+    curl -H "Authorization: Bearer <PASTE TOKEN>" http://api-popularity-score.test/score?term=abcdxyz
 
 Dobivamo rezultat
 
@@ -92,7 +121,7 @@ Dobivamo rezultat
  
  Za korištenje verzije 2 u link dodajemo v2
  
-     curl http://api-popularity-score.test/v2/score?term=php
+     curl -H "Authorization: Bearer <PASTE TOKEN>" http://api-popularity-score.test/v2/score?term=php
 
 gdje je rezultat u JSONAPI specifikaciji
 
