@@ -26,7 +26,7 @@ class PopularityV2Test extends TestCase
     public function get_json_from_service_provider_and_save_to_db()
     {
         // Act
-        $this->get(route('score.v2.show', ['term' => 'php']));
+        $this->get(route('score.v2.show', ['term' => 'php', 'version' => 2]));
 
         // Assert
         $this->assertResponseStatus(200);
@@ -54,7 +54,7 @@ class PopularityV2Test extends TestCase
         ]);
 
         // Act
-        $this->get(route('score.v2.show', ['term' => 'php']));
+        $this->get(route('score.v2.show', ['term' => 'php', 'version' => 2]));
 
         // Assert
         $this->assertResponseStatus(200);
@@ -73,7 +73,7 @@ class PopularityV2Test extends TestCase
     public function term_is_required_parametar()
     {
         // Act
-        $this->get(route('score.v2.show'));
+        $this->get(route('score.v2.show', ['version' => 2]));
 
         // Assert
         $this->assertResponseStatus(422);
@@ -89,7 +89,7 @@ class PopularityV2Test extends TestCase
     public function term_must_have_word()
     {
         // Act
-        $this->get(route('score.v2.show', ['term' => '']));
+        $this->get(route('score.v2.show', ['term' => '', 'version' => 2]));
 
         // Assert
         $this->assertResponseStatus(422);

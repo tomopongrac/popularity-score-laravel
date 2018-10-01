@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Responses;
 
-class PopularityScoreV2Controller extends PopularityScoreController implements PopularityScoreInterface
+class jSonResponseV2 implements ResponseInterface
 {
 
-    protected $responseHeader = [
-        'Accept' => 'application/vnd.api+json',
-    ];
-
+    /**
+     * @param $data
+     * @return array
+     */
     public function transformValidationResponseData($data)
     {
         return [
@@ -18,6 +18,10 @@ class PopularityScoreV2Controller extends PopularityScoreController implements P
         ];
     }
 
+    /**
+     * @param $data
+     * @return array
+     */
     public function transformNormalDataResponse($data)
     {
         return [
@@ -25,6 +29,16 @@ class PopularityScoreV2Controller extends PopularityScoreController implements P
                 'term' => $data['term'],
                 'score' => $data['score']
             ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getResponseHeader()
+    {
+        return [
+            'Accept' => 'application/vnd.api+json',
         ];
     }
 }

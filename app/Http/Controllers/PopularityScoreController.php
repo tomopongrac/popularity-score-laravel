@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\jSonResponseNotExist;
 use App\Exceptions\NoTermInDbException;
 use App\PopularityResult;
+use App\Responses\jSonResponseFactory;
 use App\Services\ServiceProvider;
 
-abstract class PopularityScoreController extends Controller
+class PopularityScoreController extends Controller
 {
 
     protected $statusCode;
     protected $responseHeader = [];
+    protected $jsonResponse;
     /**
      * @var ServiceProvider
      */
@@ -33,12 +36,19 @@ abstract class PopularityScoreController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show()
+    public function show($version = null)
     {
+
+        try {
+            $this->jsonResponse = jSonResponseFactory::create($version);
+        } catch (jSonResponseNotExist $e) {
+            return $this->setStatusCode(404)->respond([]);
+        }
+
         $term = request()->get('term');
 
         if ($term === null) {
-            return $this->setStatusCode(422)->respond($this->transformValidationResponseData([]));
+            return $this->setStatusCode(422)->respond($this->jsonResponse->transformValidationResponseData([]));
         }
 
         try {
@@ -48,7 +58,7 @@ abstract class PopularityScoreController extends Controller
                 throw new NoTermInDbException;
             }
 
-            return $this->setStatusCode(200)->respond($this->transformNormalDataResponse([
+            return $this->setStatusCode(200)->respond($this->jsonResponse->transformNormalDataResponse([
                 'term' => $termFromDb->term,
                 'score' => $termFromDb->score,
             ]));
@@ -62,7 +72,7 @@ abstract class PopularityScoreController extends Controller
 
             $this->popularityResult->saveResultToDb($result);
 
-            return $this->setStatusCode(200)->respond($this->transformNormalDataResponse($result));
+            return $this->setStatusCode(200)->respond($this->jsonResponse->transformNormalDataResponse($result));
         }
     }
 
@@ -92,6 +102,12 @@ abstract class PopularityScoreController extends Controller
      */
     protected function respond($data)
     {
-        return response()->json($data, $this->getStatusCode(), $this->responseHeader);
+        $responseHeader = [];
+        if ($this->jsonResponse !== null) {
+            $responseHeader = $this->jsonResponse->getResponseHeader();
+        }
+
+        return response()->json($data, $this->getStatusCode(), $responseHeader);
     }
+
 }
