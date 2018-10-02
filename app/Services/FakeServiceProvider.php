@@ -7,8 +7,7 @@ class FakeServiceProvider extends ServiceProvider
 
     public function getResult($searchTerm)
     {
-        if (strpos($searchTerm, self::POSITIVE_WORD_SULFIX) !== false)
-        {
+        if (strpos($searchTerm, self::POSITIVE_WORD_SULFIX) !== false) {
             return json_encode([
                 "total_count" => 333
             ]);

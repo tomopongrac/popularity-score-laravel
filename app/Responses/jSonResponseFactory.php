@@ -18,8 +18,7 @@ class jSonResponseFactory
 
         $className = '\App\Responses\jSonResponseV' . $version;
 
-        if (! class_exists($className))
-        {
+        if (!class_exists($className)) {
             throw new jSonResponseNotExist();
         }
 

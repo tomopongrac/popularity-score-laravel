@@ -79,6 +79,8 @@ class PopularityScoreController extends Controller
     }
 
     /**
+     * Set status code for response
+     *
      * @param $statusCode
      * @return $this
      */

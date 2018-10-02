@@ -4,8 +4,6 @@ namespace App\Responses;
 
 class jSonResponseV1 implements ResponseInterface
 {
-    public $responseHeader = [];
-
     /**
      * @param $data
      * @return array
