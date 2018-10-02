@@ -22,7 +22,7 @@ Potrebno je imati instaliran i konfiguriran lokalni server Laravel Homestead. De
 
 Za ovaj projekt kreirao sam lokalnu domenu http://api-popularity-score.test
 
-Da biste to napravili u host file dodajte dole navedenu liniju koda
+Da biste to napravili u /etc/hosts datoteku dodajte dole navedenu liniju koda
 
     192.168.10.10  api-popularity-score.test
 
@@ -30,7 +30,7 @@ A u Homestead.yml datoteku pod sites dodajte dole navedeni kod
 
     sites:
         - map: api-popularity-score.test
-          to: /home/vagrant/Code/popularity-score-laravel/public
+          to: /home/vagrant/code/popularity-score-laravel/public
 
 Pokrenite VM i spojite se ssh vezom na virtualni server
 
@@ -65,7 +65,7 @@ Kreirajte novi ključ za aplikaciju
 Kreirajte bazu na lokalnom serveru
 
     mysql -u homestead -psecret;
-    CREATE DATABASE popularity_score:
+    CREATE DATABASE popularity_score;
 
 Za provjeru da li je baza kreirana upišite naredbu
 
@@ -85,6 +85,10 @@ Kopiraj u .env datoteku Client ID i Client Secret koji ste dobili iz prethodne n
     PASSPORT_CLIENT_ID=<Client ID>
     PASSPORT_CLIENT_SECRET=<Client Secret>
 
+## OAuth
+
+Korišten je osnovni OAuth2 sustav bez korisnika (samo client credentials) preko paketa [laravel/passport](https://github.com/laravel/passport/tree/3.0).
+
 ## Korištenje aplikacije
 
 Možete koristiti aplikaciju [Postman](https://www.getpostman.com) ili možete koristiti konzolu.
@@ -99,7 +103,7 @@ Na Mac OS-u token možete  pohraniti u clipboard pomoću naredbe
 
 Kako biste dobili popularnost riječi php u konzolu upišite naredbu gdje umjesto <PASTE TOKEN> upisujete token koji ste dobili iz prethodne naredbe
 
-    curl -H "Authorization: Bearer <PASTE TOKEN>" http://api-popularity-score.test/score?term=php
+    curl -H "Authorization: Bearer <PASTE TOKEN>" http://api-popularity-score.test/score\?term\=php
 
 Rezultat će biti (vrijednost score može biti drugačija s obzirom na trenutnu popularnost tražene riječi na provideru)
 
@@ -110,7 +114,7 @@ Rezultat će biti (vrijednost score može biti drugačija s obzirom na trenutnu 
 
 Ukoliko tražimo riječ koja ne postoji s naredbom
 
-    curl -H "Authorization: Bearer <PASTE TOKEN>" http://api-popularity-score.test/score?term=abcdxyz
+    curl -H "Authorization: Bearer <PASTE TOKEN>" http://api-popularity-score.test/score\?term\=abcdxyz
 
 Dobivamo rezultat
 
@@ -121,7 +125,7 @@ Dobivamo rezultat
  
  Za korištenje verzije 2 u link dodajemo v2
  
-     curl -H "Authorization: Bearer <PASTE TOKEN>" http://api-popularity-score.test/v2/score?term=php
+     curl -H "Authorization: Bearer <PASTE TOKEN>" http://api-popularity-score.test/v2/score\?term\=php
 
 gdje je rezultat u JSONAPI specifikaciji
 
@@ -150,3 +154,9 @@ Ukoliko želite promijeniti providera to ćete napraviti na način da promjenite
 ## Kreiranje nove verzije API-ja
 
 Za kreiranje nove verzije potrebno je kreirati klasu u direktoriju app/Responses naziva jSonResponseV{broj} koja implementira interaface ResponseInterface.
+
+U novoj klasi se moraju kreirati dvije metode:
+
+* transformValidationResponseData()
+* transformNormalDataResponse()
+* getResponseHeader()
