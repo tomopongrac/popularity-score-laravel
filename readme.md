@@ -5,13 +5,13 @@
 
 ## Opis aplikacije
 
-Ovo je sustav koji računa popularnost određene riječi. Sustav za zadanu riječ pretražuje servis providera i na osnovu broju pozitivnog i negativnog rezultata računa ocjenu popularnosti zadane riječi od 0-10 (rezultat će biti zaokružen na dvije decimale).
+Ovo je sustav koji računa popularnost određene riječi. Sustav za zadanu riječ pretražuje servis providera i na osnovu broja pozitivnog i negativnog rezultata računa ocjenu popularnosti zadane riječi od 0-10 (rezultat će biti zaokružen na dvije decimale).
 
 ## Postavljanje projekta na lokalni server
 
 Server mora zadovoljiti sljedeće zahtjeve:
 
-* PHP >= 7.0
+* PHP >= 7.1
 * OpenSSL PHP Extension
 * PDO PHP Extension
 * Mbstring PHP Extension
@@ -32,7 +32,7 @@ A u Homestead.yml datoteku pod sites dodajte dole navedeni kod
         - map: api-popularity-score.test
           to: /home/vagrant/Code/popularity-score-laravel/public
 
-Pokrenite VM i spojite se ssh vezom na njega
+Pokrenite VM i spojite se ssh vezom na virtualni server
 
     cd ~/Homestead
     vagrant up
@@ -93,11 +93,11 @@ Api koristi client credentials autorizaciju pa prvo morate kreirati token get po
 
     curl http://api-popularity-score.test/get-token
 
-A možete ga odmah pohraniti u clipboard pomoću naredbe gdje umjesto <PASTE TOKEN> upisujete token koji ste dobili iz prethodne naredbe
+Na Mac OS-u token možete  pohraniti u clipboard pomoću naredbe
 
     curl http://api-popularity-score.test/get-token | pbcopy
 
-Kako biste dobili popularnost riječi php u konzolu upišite naredbu
+Kako biste dobili popularnost riječi php u konzolu upišite naredbu gdje umjesto <PASTE TOKEN> upisujete token koji ste dobili iz prethodne naredbe
 
     curl -H "Authorization: Bearer <PASTE TOKEN>" http://api-popularity-score.test/score?term=php
 
