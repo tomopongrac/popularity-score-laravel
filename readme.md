@@ -22,11 +22,11 @@ Potrebno je imati instaliran i konfiguriran lokalni server Laravel Homestead. De
 
 Za ovaj projekt kreirao sam lokalnu domenu http://api-popularity-score.test
 
-Da biste to napravili u /etc/hosts datoteku dodajte dole navedenu liniju koda
+Da biste to napravili u /etc/hosts datoteku dodajte dolje navedenu liniju koda
 
     192.168.10.10  api-popularity-score.test
 
-A u Homestead.yml datoteku pod sites dodajte dole navedeni kod
+U datoteku Homestead.yml pod sites dodajte dolje navedeni kod
 
     sites:
         - map: api-popularity-score.test
@@ -42,19 +42,19 @@ Uđite u direktorij
 
     cd code
 
-Kloniraj repozitorij
+Klonirajte repozitorij
 
     git clone https://github.com/tomopongrac/popularity-score-laravel.git
 
-Prebaci se u direktorij repozitorija
+Prebacite se u direktorij repozitorija
  
      cd popularity-score-laravel
 
-Instaliraj sve komponente aplikacije
+Instalirajte sve komponente aplikacije
 
     composer install
 
-Kopiraj datoteku env.homestead i eventualne konfigacije promjene
+Kopirajte datoteku env.homestead i eventualne konfigacije promjene
 
     cp .env.homestead .env
 
@@ -72,7 +72,7 @@ Za provjeru da li je baza kreirana upišite naredbu
     SHOW databases;
     exit
 
-Napravi tablice u bazi
+Napravite tablice u bazi
 
     php artisan migrate
 
@@ -80,7 +80,7 @@ Morate kreirati ključeve kako biste mogli kreirati token za pristup aplikaciji
 
     php artisan passport:install
 
-Kopiraj u .env datoteku Client ID i Client Secret koji ste dobili iz prethodne naredbe
+Kopirajte u .env datoteku Client ID i Client Secret koji ste dobili iz prethodne naredbe
 
     PASSPORT_CLIENT_ID=<Client ID>
     PASSPORT_CLIENT_SECRET=<Client Secret>
@@ -93,7 +93,7 @@ Korišten je osnovni OAuth2 sustav bez korisnika (samo client credentials) preko
 
 Možete koristiti aplikaciju [Postman](https://www.getpostman.com) ili možete koristiti konzolu.
 
-Api koristi client credentials autorizaciju pa prvo morate kreirati token get pozivom na link http://api-popularity-score.test/get-token
+API koristi client credentials autorizaciju pa prvo morate kreirati token get pozivom na link http://api-popularity-score.test/get-token
 
     curl http://api-popularity-score.test/get-token
 
@@ -101,7 +101,7 @@ Na Mac OS-u token možete  pohraniti u clipboard pomoću naredbe
 
     curl http://api-popularity-score.test/get-token | pbcopy
 
-Kako biste dobili popularnost riječi php u konzolu upišite naredbu gdje umjesto <PASTE TOKEN> upisujete token koji ste dobili iz prethodne naredbe
+Kako biste dobili popularnost riječi "php", u konzolu upišite naredbu gdje umjesto \<PASTE TOKEN> upisujete token koji ste dobili iz prethodne naredbe
 
     curl -H "Authorization: Bearer <PASTE TOKEN>" http://api-popularity-score.test/score\?term\=php
 
